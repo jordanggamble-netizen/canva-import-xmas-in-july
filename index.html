@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Christmas in July — Event Deck</title>
+
+<!-- Fonts: Fraunces (display, warm editorial serif) + Inter (body/utility).
+     If venue wifi is patchy these fall back to system fonts gracefully. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  /* ============================================================
+     BRAND BLOCK — change these to reskin the whole page.
+     To go TikTok-branded, e.g.:
+       --bg: #000000;  --card: #FFFFFF;  --accent: #FE2C55;  --frost: #25F4EE;
+     ============================================================ */
+  :root{
+    --bg:      #0F211C;   /* deep spruce — page background        */
+    --bg-2:    #0A1712;   /* darker, for the ambient gradient     */
+    --ink:     #F4EFE6;   /* cream text on the dark background     */
+    --muted:   #A9B8AF;   /* soft muted text on dark               */
+    --card:    #F7F2E9;   /* warm cream — the event pass           */
+    --card-ink:#17271F;   /* dark text on the pass                 */
+    --card-muted:#5E6F63;  /* muted text on the pass               */
+    --accent:  #D8A24A;   /* ember gold — the one bold colour      */
+    --accent-deep:#B67F2E;/* deeper gold for pressed/hover         */
+    --frost:   #A9D6C6;   /* mint-frost highlight                  */
+    --line:    rgba(23,39,31,0.16); /* hairlines on the pass       */
+
+    --maxw: 460px;
+    --radius: 22px;
+  }
+
+  *{ box-sizing:border-box; }
+
+  html,body{ margin:0; padding:0; }
+
+  body{
+    min-height:100dvh;
+    background:
+      radial-gradient(120% 90% at 50% -10%, #163025 0%, var(--bg) 46%, var(--bg-2) 100%);
+    color:var(--ink);
+    font-family:"Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    -webkit-font-smoothing:antialiased;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:32px 20px 28px;
+    position:relative;
+    overflow-x:hidden;
+  }
+
+  /* Ambient frost specks — very restrained, decorative only.
+     Fully removed for anyone who prefers reduced motion. */
+  .frost-field{ position:fixed; inset:0; pointer-events:none; z-index:0; }
+  .frost-field span{
+    position:absolute; top:-10px; border-radius:50%;
+    background:var(--frost); opacity:0; 
+    animation:drift linear infinite;
+  }
+  @keyframes drift{
+    0%{ transform:translateY(-10px); opacity:0; }
+    10%{ opacity:.5; }
+    90%{ opacity:.35; }
+    100%{ transform:translateY(102dvh); opacity:0; }
+  }
+
+  .wrap{
+    width:100%;
+    max-width:var(--maxw);
+    position:relative;
+    z-index:1;
+    animation:rise .7s cubic-bezier(.2,.7,.2,1) both;
+  }
+  @keyframes rise{
+    from{ opacity:0; transform:translateY(14px); }
+    to{ opacity:1; transform:translateY(0); }
+  }
+
+  /* ---- Eyebrow above the pass ---- */
+  .eyebrow{
+    display:flex; align-items:center; gap:10px;
+    justify-content:center;
+    font-size:12px; letter-spacing:.16em; text-transform:uppercase;
+    font-weight:600; color:var(--frost);
+    margin:0 0 18px;
+  }
+  .eyebrow .dot{ width:5px; height:5px; border-radius:50%; background:var(--accent); }
+
+  /* ============================================================
+     THE EVENT PASS  (the signature element — a ticket/handout twin)
+     ============================================================ */
+  .pass{
+    background:var(--card);
+    color:var(--card-ink);
+    border-radius:var(--radius);
+    box-shadow:0 24px 60px -24px rgba(0,0,0,.7), 0 2px 0 rgba(255,255,255,.05);
+    overflow:hidden;
+  }
+
+  .pass__head{ padding:30px 26px 24px; }
+
+  .pass__kicker{
+    font-size:12px; letter-spacing:.14em; text-transform:uppercase;
+    font-weight:600; color:var(--accent-deep); margin:0 0 14px;
+  }
+  .pass__title{
+    font-family:"Fraunces", Georgia, serif;
+    font-weight:500;
+    font-size:clamp(34px, 9vw, 46px);
+    line-height:1.02;
+    letter-spacing:-.01em;
+    margin:0 0 4px;
+  }
+  .pass__title em{ font-style:italic; color:var(--accent-deep); }
+  .pass__sub{
+    font-size:15px; line-height:1.5; color:var(--card-muted);
+    margin:14px 0 0; max-width:34ch;
+  }
+
+  /* meta row: date + venue */
+  .meta{
+    display:flex; gap:26px; margin:22px 0 0;
+    border-top:1px solid var(--line); padding-top:18px;
+  }
+  .meta div{ display:flex; flex-direction:column; gap:3px; }
+  .meta .lab{
+    font-size:11px; letter-spacing:.1em; text-transform:uppercase;
+    font-weight:600; color:var(--card-muted);
+  }
+  .meta .val{ font-size:15px; font-weight:500; }
+
+  /* ---- Perforation: the ticket tear line with side notches ---- */
+  .perf{ position:relative; height:0; }
+  .perf::before,
+  .perf::after{
+    content:""; position:absolute; top:-11px;
+    width:22px; height:22px; border-radius:50%;
+    background:var(--bg); /* must match page bg to read as a punched notch */
+  }
+  .perf::before{ left:-11px; }
+  .perf::after{ right:-11px; }
+  .perf .dashes{
+    position:absolute; left:16px; right:16px; top:-1px; height:2px;
+    background:repeating-linear-gradient(90deg,
+      var(--line) 0 7px, transparent 7px 15px);
+  }
+
+  /* ---- The download half of the pass ---- */
+  .pass__foot{ padding:26px; }
+  .deck{
+    display:flex; align-items:center; gap:14px; margin:0 0 20px;
+  }
+  .deck__icon{
+    flex:none; width:46px; height:46px; border-radius:12px;
+    background:linear-gradient(150deg, #21382E, #17271F);
+    display:flex; align-items:center; justify-content:center;
+    color:var(--frost);
+  }
+  .deck__meta{ display:flex; flex-direction:column; gap:2px; min-width:0; }
+  .deck__name{ font-weight:600; font-size:15px; }
+  .deck__note{ font-size:13px; color:var(--card-muted); }
+
+  /* The main action — the whole reason the page exists */
+  .download{
+    display:flex; align-items:center; justify-content:center; gap:10px;
+    width:100%; padding:17px 20px;
+    background:var(--accent); color:#231603;
+    font-family:"Inter",sans-serif; font-weight:600; font-size:16px;
+    text-decoration:none; border:none; border-radius:14px;
+    cursor:pointer; letter-spacing:.01em;
+    transition:transform .15s ease, background .15s ease, box-shadow .15s ease;
+    box-shadow:0 10px 24px -10px rgba(216,162,74,.8);
+  }
+  .download:hover{ background:#E6B25C; transform:translateY(-2px); }
+  .download:active{ background:var(--accent-deep); transform:translateY(0); }
+  .download:focus-visible{ outline:3px solid var(--frost); outline-offset:3px; }
+  .download svg{ flex:none; }
+
+  /* ---- Fallback URL line, mirrors the print handout advice ---- */
+  .fallback{
+    text-align:center; margin:22px 0 0;
+    font-size:13px; color:var(--muted); line-height:1.6;
+  }
+  .fallback b{ color:var(--ink); font-weight:600; }
+
+  .brandline{
+    text-align:center; margin:26px 0 0;
+    font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--muted); font-weight:500;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .wrap{ animation:none; }
+    .frost-field{ display:none; }
+    .download{ transition:none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- decorative frost, generated + hidden under reduced-motion -->
+<div class="frost-field" id="frost" aria-hidden="true"></div>
+
+<main class="wrap">
+
+  <!-- EDIT: event name / when it runs -->
+  <p class="eyebrow"><span class="dot"></span> TikTok · Sydney · July 2026</p>
+
+  <section class="pass" aria-label="Event pass">
+    <div class="pass__head">
+      <!-- EDIT: the event's short label -->
+      <p class="pass__kicker">Advertiser Keynote</p>
+      <!-- EDIT: the event title. <em> italicises + colours a word -->
+      <h1 class="pass__title">Christmas <em>in July</em></h1>
+      <!-- EDIT: one line of context -->
+      <p class="pass__sub">Everything from today's session — yours to keep. Scan, download, done.</p>
+
+      <div class="meta">
+        <div>
+          <span class="lab">Date</span>
+          <span class="val">Thu 24 July</span> <!-- EDIT -->
+        </div>
+        <div>
+          <span class="lab">Venue</span>
+          <span class="val">The Grounds</span> <!-- EDIT -->
+        </div>
+      </div>
+    </div>
+
+    <div class="perf" aria-hidden="true"><span class="dashes"></span></div>
+
+    <div class="pass__foot">
+      <div class="deck">
+        <div class="deck__icon" aria-hidden="true">
+          <!-- deck/slide glyph -->
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="13" rx="2"></rect>
+            <path d="M8 21h8M12 17v4"></path>
+          </svg>
+        </div>
+        <div class="deck__meta">
+          <!-- EDIT: file name + size/updated note -->
+          <span class="deck__name">Keynote deck — Watch. Love. Want. Buy.</span>
+          <span class="deck__note">PDF · updated after the event</span>
+        </div>
+      </div>
+
+      <!-- ============================================================
+           THE ONE THING TO REPLACE:
+           swap the href below for your hosted PDF link.
+           Best practice: point this at the file, but point your
+           printed QR code at a DYNAMIC redirect that lands here —
+           so you can change the file later without reprinting.
+           ============================================================ -->
+      <a class="download" href="#REPLACE_WITH_YOUR_DECK_LINK" download>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 3v12m0 0l-4-4m4 4l4-4"></path>
+          <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"></path>
+        </svg>
+        Download the deck
+      </a>
+    </div>
+  </section>
+
+  <!-- Human-readable fallback, same idea as the printed handout -->
+  <p class="fallback">Trouble scanning? Go to<br><b>yourbrand.com/xmas-in-july</b></p> <!-- EDIT -->
+
+  <p class="brandline">See you next quarter</p> <!-- EDIT -->
+
+</main>
+
+<script>
+  // Generate a handful of frost specks. Skipped entirely if the user
+  // prefers reduced motion, so nothing moves for them.
+  (function(){
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var field = document.getElementById('frost');
+    var N = 14;
+    for (var i=0;i<N;i++){
+      var s = document.createElement('span');
+      var size = 2 + Math.random()*4;
+      s.style.width = size+'px';
+      s.style.height = size+'px';
+      s.style.left = Math.random()*100+'%';
+      s.style.animationDuration = (9 + Math.random()*9)+'s';
+      s.style.animationDelay = (-Math.random()*12)+'s';
+      field.appendChild(s);
+    }
+  })();
+</script>
+</body>
+</html>
